@@ -1,9 +1,17 @@
 import express from 'express';
 import authRoutes from './routes/authRoutes.js';
-import cors from 'cors'
+import cors from 'cors';
+
 const app = express();
+const corsOptions = {
+  origin: 'https://academia-cds.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'], 
+  credentials: true 
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
-app.use(cors());
 app.use(authRoutes);
 
 export default app;
