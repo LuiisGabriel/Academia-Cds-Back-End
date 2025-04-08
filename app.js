@@ -4,10 +4,11 @@ import cors from 'cors';
 
 const app = express();
 const corsOptions = {
-  origin: 'https://academia-cds.vercel.app',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  origin: '*',
+  methods: '*',
   allowedHeaders: ['Content-Type', 'Authorization'], 
   credentials: true 
+  'preflightContinue': false
 };
 
 app.use(cors(corsOptions));
