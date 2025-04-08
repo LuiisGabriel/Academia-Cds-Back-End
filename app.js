@@ -7,7 +7,7 @@ const corsOptions = {
   origin: '*',
   methods: '*',
   allowedHeaders: ['Content-Type', 'Authorization'], 
-  credentials: true 
+  credentials: true,
   'preflightContinue': false
 };
 
