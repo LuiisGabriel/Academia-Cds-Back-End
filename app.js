@@ -2,6 +2,7 @@ import express from 'express';
 import authRoutes from './routes/authRoutes.js';
 import cors from 'cors';
 
+var cors = require('cors');
 const app = express();
 const corsOptions = {
   origin: 'https://academia-cds.vercel.app',
