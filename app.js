@@ -4,7 +4,6 @@ import cors from 'cors';
 
 const app = express();
 
-
 const corsOptions = {
   origin: '*', 
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
@@ -13,7 +12,11 @@ const corsOptions = {
   preflightContinue: false
 };
 
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: 'https://academia-cds.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
 app.use(express.json());
 app.use(authRoutes);
 
