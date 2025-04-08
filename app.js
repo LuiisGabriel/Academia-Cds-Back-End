@@ -8,7 +8,7 @@ const corsOptions = {
   methods: '*',
   allowedHeaders: ['Content-Type', 'Authorization'], 
   credentials: true,
-  'preflightContinue': false
+  'preflightContinue': true
 };
 
 app.use(cors(corsOptions));
