@@ -5,14 +5,6 @@ import AuthController from '../controllers/authController.js';
 const router = express.Router();
 const authController = new AuthController();
 
-var app = express();
-
-var corsOptions = {
-  origin: '*',
-  optionsSuccessStatus: 200
-}
-
-app.use(cors(corsOptions));
 
 router.post('/auth/signup', (req, res) => authController.signup(req, res));
 router.post('/auth/signin', (req, res) => authController.signin(req, res));
