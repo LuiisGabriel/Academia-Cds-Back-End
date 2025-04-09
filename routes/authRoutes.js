@@ -5,6 +5,8 @@ import AuthController from '../controllers/authController.js';
 const router = express.Router();
 const authController = new AuthController();
 
+var app = express();
+
 var corsOptions = {
   origin: '*',
   optionsSuccessStatus: 200
