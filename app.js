@@ -4,13 +4,7 @@ import cors from 'cors';
 
 const app = express();
 
-
-var corsOptions = {
-  origin: '*',
-  optionsSuccessStatus: 200
-}
-
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(express.json());
 app.use(authRoutes);
