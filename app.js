@@ -4,8 +4,8 @@ import authRoutes from './routes/authRoutes.js';
 
 const app = express();
 
-app.options('*', (req, res) => {
-  res.sendStatus(200); 
+app.options('/*', (_, res) => {
+    res.sendStatus(200);
 });
 
 const corsOrigin = {
