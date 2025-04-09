@@ -9,7 +9,7 @@ const corsOptions = {
   origin: "*"
 }
 
-app.options('*', cors());
+app.options('*', cors(corsOptions));
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(authRoutes);
