@@ -4,23 +4,17 @@ import authRoutes from './routes/authRoutes.js';
 
 const app = express();
 
-app.options('*', (req, res) => {
-    res.header('Access-Control-Allow-Origin', 'https://academia-cds.vercel.app');  
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.sendStatus(204); 
-  });
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Origin');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
  
- const corsOrigin = {
-   origin: 'https://academia-cds.vercel.app', 
-   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],  
-   allowedHeaders: ['Content-Type', 'Authorization'], 
-   credentials: true,  
-   optionSuccessStatus:200
- };
- 
- app.use(cors(corsOrigin));
+app.use(cors());
 app.use(express.json());
 app.use(authRoutes);
 
