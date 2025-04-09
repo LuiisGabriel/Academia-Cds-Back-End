@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import AuthController from '../controllers/authController.js';
 
 const router = express.Router();
