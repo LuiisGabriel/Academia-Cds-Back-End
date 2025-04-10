@@ -5,7 +5,7 @@ import authRoutes from './routes/authRoutes.js';
 const app = express();
 
 
- app.options('*', (req, res) => {
+ app.options('https://academia-cds.vercel.app', (req, res) => {
      res.header('Access-Control-Allow-Origin', 'https://academia-cds.vercel.app');  
      res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
