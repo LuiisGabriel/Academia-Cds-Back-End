@@ -10,5 +10,3 @@ import express from 'express';
  router.post('/auth/signIn', (req, res) => authController.signin(req, res));
  router.get('/auth/me', (req, res) => authController.getCurrentUser(req, res));
  router.post('/auth/createVideo', (req, res) => authController.createVideo(req, res));
-
- export default authRoutes;
