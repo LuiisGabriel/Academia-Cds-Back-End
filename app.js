@@ -6,7 +6,7 @@ const app = express();
 
 
  app.options('*', (req, res) => {
-     res.header('Access-Control-Allow-Origin', 'https://academia-cds.onrender.com');  
+     res.header('Access-Control-Allow-Origin', 'https://academia-cds.vercel.app');  
      res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
      res.header('Access-Control-Allow-Credentials', 'true');
@@ -14,7 +14,7 @@ const app = express();
    });
   
   const corsOrigin = {
-    origin: 'https://academia-cds.onrender.com', 
+    origin: 'https://academia-cds.vercel.app', 
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],  
     allowedHeaders: ['Content-Type', 'Authorization'], 
     credentials: true,  
