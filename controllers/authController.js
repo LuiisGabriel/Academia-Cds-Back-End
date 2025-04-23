@@ -55,6 +55,20 @@ class AuthController {
     }
   }
 
+  async getVideos(req, res) {
+    try {
+      const { ambiente, modulo, subModulo } = req.body;
+      if (!ambiente || !modulo || !subModulo) {
+        res.status(400).end();
+        return;
+      }
+      const videos = await this.authService.getVideos(ambiente, modulo, subModulo);
+      res.status(200).json({ videos });
+    } catch (err) {
+      console.error("POST auth/getVideos, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
 
   async createVideo(req, res) {
     try {

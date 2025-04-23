@@ -1,8 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import gqlClient from "../graphql/client.js";
-import { CreateNextUserMutation, GetUserByEmailQuery, CreateVideoMutation, GetVideos } from "../graphql/mutations.js";
-
+import { CreateNextUserMutation, GetUserByEmailQuery, CreateVideoMutation, GetVideosQuery } from "../graphql/mutations.js";
 
 const { JWT_SECRET, JWT_EXPIRES_IN } = process.env;
 
@@ -15,7 +14,6 @@ class AuthService {
     if (getUserResponse?.nextUser?.email === email) {
       throw new Error("Este email já está sendo utilizado");
     }
-
     const hashedPassword = await bcrypt.hash(password, 8);
     const userData = {
       email,
@@ -24,7 +22,6 @@ class AuthService {
       lastname,
       role,
     };
-
     const response = await gqlClient.request(CreateNextUserMutation, {
       userData,
     });
@@ -43,7 +40,7 @@ class AuthService {
     });
     const { nextUser } = getUserResponse;
     if (!nextUser) {
-      throw new Error("Email ou senha inválidos");
+      throw new Error("Este usuário não existe!");
     }
     const isMatch = await bcrypt.compare(password, nextUser.password);
     if (!isMatch) {
@@ -60,7 +57,6 @@ class AuthService {
     return token;
   }
 
-
   async getCurrentUser(token) {
     const decoded = jwt.verify(token, JWT_SECRET);
     const getUserResponse = await gqlClient.request(GetUserByEmailQuery, {
@@ -74,6 +70,18 @@ class AuthService {
     return nextUser;
   }
 
+  async getVideos(ambiente, modulo, subModulo) {
+    const getVideosResponse = await gqlClient.request(GetVideosQuery, {
+      ambiente,
+      modulo,
+      subModulo,
+    });
+    const { videos } = getVideosResponse;
+    if (!videos) {
+      throw new Error("Videos não encontrados");
+    }
+    return getVideosResponse;
+  }
 
   async createVideo(createVideoRequest) {
     const { titulo, ambiente, modulo, url, subModulo } = createVideoRequest;
@@ -92,7 +100,6 @@ class AuthService {
     }
     return { user: response.createVideo };
   }
-
 }
 
 export default AuthService;

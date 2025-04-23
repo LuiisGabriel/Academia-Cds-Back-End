@@ -35,7 +35,7 @@ export const CreateVideoMutation = gql`
   } 
  `;
 
-export const GetVideos = gql`
+export const GetVideosQuery = gql`
 query getVideos($modulo: String, $subModulo: String, $ambiente: String) {
   videos(
     first: 999999
@@ -46,6 +46,7 @@ query getVideos($modulo: String, $subModulo: String, $ambiente: String) {
     titulo
     modulo
     subModulo
+    ambiente
     url
   }
 }
