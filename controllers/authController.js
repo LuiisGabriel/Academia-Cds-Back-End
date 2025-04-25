@@ -57,7 +57,7 @@ class AuthController {
 
   async getVideos(req, res) {
     try {
-      const { ambiente, modulo, subModulo } = req.body;
+      const { ambiente, modulo, subModulo } = req.query;
       if (!ambiente || !modulo || !subModulo) {
         res.status(400).end();
         return;
@@ -65,7 +65,7 @@ class AuthController {
       const videos = await this.authService.getVideos(ambiente, modulo, subModulo);
       res.status(200).json({ videos });
     } catch (err) {
-      console.error("POST auth/getVideos, Something Went Wrong:", err);
+      console.error("GET auth/getVideos, Something Went Wrong:", err);
       res.status(400).send({ error: true, message: err.message });
     }
   }
@@ -87,6 +87,24 @@ class AuthController {
       res.send({ user, token });
     } catch (err) {
       console.error("POST auth/createVideo, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
+  async updateUserWatchedVideos(req, res) {
+    try {
+      const { email, watchedvideos } = req.body;
+      if (!email || !watchedvideos) {
+        res.status(400).end();
+        return;
+      }
+      const { updatedUserWatchedVideos } = await this.authService.updateUserWatchedVideos({
+        email,
+        watchedvideos,
+      });
+      res.send({ updatedUserWatchedVideos });
+    } catch (err) {
+      console.error("POST auth/updateUserWatchedVideos, Something Went Wrong:", err);
       res.status(400).send({ error: true, message: err.message });
     }
   }

@@ -21,6 +21,7 @@ query getUserByEmailQuery($email: String!) {
     url
     }
     role
+    watchedvideos
   }
 }
 `;
@@ -51,6 +52,16 @@ query getVideos($modulo: String, $subModulo: String, $ambiente: String) {
   }
 }
 `;
+
+export const updateUserWatchedVideosMutation = gql `
+mutation updateNextUserWatchedvideos($watchedvideos: [String!], $email: String!) {
+    updateNextUser(where:{email: $email}, data: {watchedvideos: $watchedvideos}){
+      email
+      watchedvideos
+    }
+  }
+`;
+
 
 
 
