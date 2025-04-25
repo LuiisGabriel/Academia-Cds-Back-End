@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import gqlClient from "../graphql/client.js";
-import { CreateNextUserMutation, GetUserByEmailQuery, CreateVideoMutation, GetVideosQuery } from "../graphql/mutations.js";
+import { CreateNextUserMutation, GetUserByEmailQuery, CreateVideoMutation, GetVideosQuery, updateUserWatchedVideosMutation } from "../graphql/mutations.js";
 
 const { JWT_SECRET, JWT_EXPIRES_IN } = process.env;
 
@@ -80,7 +80,7 @@ class AuthService {
     if (!videos) {
       throw new Error("Videos não encontrados");
     }
-    return getVideosResponse;
+    return videos;
   }
 
   async createVideo(createVideoRequest) {
@@ -100,6 +100,20 @@ class AuthService {
     }
     return { user: response.createVideo };
   }
+
+  async updateUserWatchedVideos(updatedUserWatchedVideosRequest) {
+    const { email, watchedvideos } = updatedUserWatchedVideosRequest;
+    const response = await gqlClient.request(updateUserWatchedVideosMutation, {
+      email,
+      watchedvideos,
+    });
+    if (!response?.updateNextUser) {
+      throw new Error("UpdateUserWatchedVideos Failed");
+    }
+    return response.updateNextUser;
+  }
+
+
 }
 
 export default AuthService;
