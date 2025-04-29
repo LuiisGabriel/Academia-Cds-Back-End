@@ -91,6 +91,28 @@ class AuthController {
     }
   }
 
+  async createQuestion(req, res) {
+    try {
+      const { title, answerOptions, modulo, ambiente, subModulo, nivel } = req.body;
+      if (!title ||!answerOptions || !ambiente || !modulo || !subModulo || !nivel) {
+        res.status(400).end();
+        return;
+      }
+      const { user, token } = await this.authService.createQuestion({
+        title,
+        ambiente,
+        modulo,
+        nivel,
+        subModulo,
+        answerOptions,
+      });
+      res.send({ user, token });
+    } catch (err) {
+      console.error("POST auth/createQuestion, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
   async updateUserWatchedVideos(req, res) {
     try {
       const { email, watchedvideos } = req.body;

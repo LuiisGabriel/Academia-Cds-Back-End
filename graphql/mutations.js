@@ -36,6 +36,14 @@ export const CreateVideoMutation = gql`
   } 
  `;
 
+ export const CreateQuestionMutation = gql`
+   mutation CreateQuestion($questionData: QuestionCreateInput!) {
+      createQuestion(data: $questionData) {
+      id
+    }
+  } 
+ `;
+
 export const GetVideosQuery = gql`
 query getVideos($modulo: String, $subModulo: String, $ambiente: String) {
   videos(
