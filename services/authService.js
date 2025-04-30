@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import gqlClient from "../graphql/client.js";
-import { CreateNextUserMutation, GetUserByEmailQuery, CreateVideoMutation, GetVideosQuery, updateUserWatchedVideosMutation, CreateQuestionMutation } from "../graphql/mutations.js";
+import { CreateNextUserMutation, GetUserByEmailQuery, CreateVideoMutation, GetVideosQuery, GetQuestionsQuery, updateUserWatchedVideosMutation, CreateQuestionMutation } from "../graphql/mutations.js";
 
 const { JWT_SECRET, JWT_EXPIRES_IN } = process.env;
 
@@ -81,6 +81,15 @@ class AuthService {
       throw new Error("Videos não encontrados");
     }
     return videos;
+  }
+
+  async getQuestions() {
+    const getQuestionsResponse = await gqlClient.request(GetQuestionsQuery);
+    const { questions } = getQuestionsResponse;
+    if (!questions) {
+      throw new Error("Questões não encontradas");
+    }
+    return questions;
   }
 
   async createVideo(createVideoRequest) {

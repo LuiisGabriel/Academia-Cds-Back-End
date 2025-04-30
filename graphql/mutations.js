@@ -61,6 +61,22 @@ query getVideos($modulo: String, $subModulo: String, $ambiente: String) {
 }
 `;
 
+export const GetQuestionsQuery = gql`
+query getQuestions{
+  questions(
+    first: 999999
+    stage: DRAFT
+  ){
+    title
+    nivel
+    ambiente
+    modulo
+    subModulo
+    answerOptions
+  }
+}
+`;
+
 export const updateUserWatchedVideosMutation = gql `
 mutation updateNextUserWatchedvideos($watchedvideos: [String!], $email: String!) {
     updateNextUser(where:{email: $email}, data: {watchedvideos: $watchedvideos}){

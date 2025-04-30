@@ -70,6 +70,16 @@ class AuthController {
     }
   }
 
+  async getQuestions(req, res) {
+    try {
+      const questions = await this.authService.getQuestions();
+      res.status(200).json({ questions });
+    } catch (err) {
+      console.error("GET auth/getQuestions, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
   async createVideo(req, res) {
     try {
       const { titulo, ambiente, modulo, url, subModulo } = req.body;
