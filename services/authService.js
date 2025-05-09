@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import gqlClient from "../graphql/client.js";
-import { CreateNextUserMutation, GetUserByEmailQuery, CreateVideoMutation, GetVideosQuery, GetQuestionsQuery, updateUserWatchedVideosMutation, CreateQuestionMutation } from "../graphql/mutations.js";
+import { CreateNextUserMutation, GetUserByEmailQuery, CreateVideoMutation, GetVideosQuery, GetQuestionsQuery, updateUserWatchedVideosMutation, CreateQuestionMutation, GetAmbientesQuery, GetModulosQuery, GetSubModulosQuery, GetTreinamentosQuery, CreateTreinamentoMutation, GetAvaliacoesQuery, CreateAvaliacaoMutation, updateUserAnsweredValuationsMutation } from "../graphql/mutations.js";
 
 const { JWT_SECRET, JWT_EXPIRES_IN } = process.env;
 
@@ -92,6 +92,51 @@ class AuthService {
     return questions;
   }
 
+  async getAmbientes() {
+    const getAmbientesResponse = await gqlClient.request(GetAmbientesQuery);
+    const { ambientes } = getAmbientesResponse;
+    if (!ambientes) {
+      throw new Error("Ambientes não encontrados");
+    }
+    return ambientes;
+  }
+
+  async getModulos() {
+    const getModulosResponse = await gqlClient.request(GetModulosQuery);
+    const { modulos } = getModulosResponse;
+    if (!modulos) {
+      throw new Error("Modulos não encontrados");
+    }
+    return modulos;
+  }
+
+  async getSubModulos() {
+    const getSubModulosResponse = await gqlClient.request(GetSubModulosQuery);
+    const { subModulos } = getSubModulosResponse;
+    if (!subModulos) {
+      throw new Error("SubModulos não encontrados");
+    }
+    return subModulos;
+  }
+
+  async getTreinamentos() {
+    const getTreinamentosResponse = await gqlClient.request(GetTreinamentosQuery);
+    const { treinamentos } = getTreinamentosResponse;
+    if (!treinamentos) {
+      throw new Error("Treinamentos não encontrados");
+    }
+    return treinamentos;
+  }
+
+  async getAvaliacoes() {
+    const getAvaliacoesResponse = await gqlClient.request(GetAvaliacoesQuery);
+    const { avaliacoes } = getAvaliacoesResponse;
+    if (!avaliacoes) {
+      throw new Error("Avaliações não encontradas");
+    }
+    return avaliacoes;
+  }
+
   async createVideo(createVideoRequest) {
     const { titulo, ambiente, modulo, url, subModulo } = createVideoRequest;
     const videoData = {
@@ -108,6 +153,42 @@ class AuthService {
       throw new Error("CreateVideo Failed");
     }
     return { user: response.createVideo };
+  }
+
+  async createTreinamento(createTreinamentoRequest) {
+    const { titulo, descricao, ambiente, modulo, subModulo } = createTreinamentoRequest;
+    const treinamentoData = {
+      titulo,
+      descricao,
+      ambiente,
+      modulo,
+      subModulo,
+    };
+    const response = await gqlClient.request(CreateTreinamentoMutation, {
+      treinamentoData,
+    });
+    if (!response?.createTreinamento) {
+      throw new Error("CreateTreinamento Failed");
+    }
+    return { user: response.createTreinamento };
+  }
+
+  async createAvaliacao(createAvaliacaoRequest) {
+    const { titulo, descricao, ambiente, modulo, subModulo } = createAvaliacaoRequest;
+    const avaliacaoData = {
+      titulo,
+      descricao,
+      ambiente,
+      modulo,
+      subModulo,
+    };
+    const response = await gqlClient.request(CreateAvaliacaoMutation, {
+      avaliacaoData,
+    });
+    if (!response?.createAvaliacao) {
+      throw new Error("CreateAvaliacao Failed");
+    }
+    return { user: response.createAvaliacao };
   }
 
   async createQuestion(createQuestionRequest) {
@@ -137,6 +218,18 @@ class AuthService {
     });
     if (!response?.updateNextUser) {
       throw new Error("UpdateUserWatchedVideos Failed");
+    }
+    return response.updateNextUser;
+  }
+
+  async updateUserAnsweredValuations(updatedUserAnsweredValuationsRequest) {
+    const { email, answeredValuations } = updatedUserAnsweredValuationsRequest;
+    const response = await gqlClient.request(updateUserAnsweredValuationsMutation, {
+      email,
+      answeredValuations,
+    });
+    if (!response?.updateNextUser) {
+      throw new Error("UpdateUserAnsweredValuations Failed");
     }
     return response.updateNextUser;
   }

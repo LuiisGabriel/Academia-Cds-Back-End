@@ -1,14 +1,5 @@
 import { gql } from 'graphql-request';
 
-export const CreateNextUserMutation = gql`
-    mutation CreateNextUser($userData: NextUserCreateInput!) {
-      createNextUser(data: $userData) {
-      id
-      email
-    }
-  }
-`;
-
 export const GetUserByEmailQuery = gql`
 query getUserByEmailQuery($email: String!) {
   nextUser(where: {email: $email}, stage: DRAFT) {
@@ -22,27 +13,10 @@ query getUserByEmailQuery($email: String!) {
     }
     role
     watchedvideos
+    answeredValuations
   }
 }
 `;
-
-
-export const CreateVideoMutation = gql`
-    mutation CreateVideo($videoData: VideoCreateInput!) {
-      createVideo(data: $videoData) {
-      id
-      titulo
-    }
-  } 
- `;
-
- export const CreateQuestionMutation = gql`
-   mutation CreateQuestion($questionData: QuestionCreateInput!) {
-      createQuestion(data: $questionData) {
-      id
-    }
-  } 
- `;
 
 export const GetVideosQuery = gql`
 query getVideos($modulo: String, $subModulo: String, $ambiente: String) {
@@ -77,13 +51,126 @@ query getQuestions{
 }
 `;
 
-export const updateUserWatchedVideosMutation = gql `
+export const GetAmbientesQuery = gql`
+query getAmbientes{
+  ambientes(
+    stage: DRAFT
+    first: 999999
+  ){
+    nome
+  }
+}
+`;
+
+export const GetModulosQuery = gql`
+query getModulos{
+  modulos(
+    stage: DRAFT
+    first: 999999
+  ){
+    nome
+  }
+}
+`;
+
+export const GetSubModulosQuery = gql`
+query getSubModulos{
+  subModulos(
+    stage: DRAFT
+    first: 999999
+  ){
+    nome
+  }
+}
+`;
+
+export const GetTreinamentosQuery = gql`
+query getTreinamentos{
+  treinamentos(
+    stage: DRAFT
+    first: 999999
+  ){
+    titulo
+    descricao
+    ambiente
+    modulo
+    subModulo
+  }
+}
+`;
+
+export const GetAvaliacoesQuery = gql`
+query getAvaliacoes{
+  avaliacoes(
+    stage: DRAFT
+    first: 999999
+  ){
+    id
+    titulo
+    descricao
+    ambiente
+    modulo
+    subModulo
+  }
+}
+`;
+
+export const CreateVideoMutation = gql`
+    mutation CreateVideo($videoData: VideoCreateInput!) {
+      createVideo(data: $videoData) {
+      id
+    }
+  } 
+ `;
+
+export const CreateTreinamentoMutation = gql`
+    mutation CreateTreinamento($treinamentoData: TreinamentoCreateInput!) {
+      createTreinamento(data: $treinamentoData) {
+      id
+    }
+  } 
+ `;
+
+export const CreateAvaliacaoMutation = gql`
+ mutation CreateAvaliacao($avaliacaoData: AvaliacaoCreateInput!) {
+   createAvaliacao(data: $avaliacaoData) {
+   id
+ }
+} 
+`;
+
+export const CreateQuestionMutation = gql`
+   mutation CreateQuestion($questionData: QuestionCreateInput!) {
+      createQuestion(data: $questionData) {
+      id
+    }
+  } 
+ `;
+
+export const CreateNextUserMutation = gql`
+    mutation CreateNextUser($userData: NextUserCreateInput!) {
+      createNextUser(data: $userData) {
+      id
+    }
+  }
+`;
+
+export const updateUserWatchedVideosMutation = gql`
 mutation updateNextUserWatchedvideos($watchedvideos: [String!], $email: String!) {
     updateNextUser(where:{email: $email}, data: {watchedvideos: $watchedvideos}){
       email
       watchedvideos
     }
   }
+`;
+
+export const updateUserAnsweredValuationsMutation = gql`
+mutation updateNextUserAnsweredValuations($answeredValuations: Json!, $email: String!) {
+    updateNextUser(where: { email: $email }, data: { answeredValuations: $answeredValuations }) {
+        email
+        answeredValuations
+    }
+}
 `;
 
 

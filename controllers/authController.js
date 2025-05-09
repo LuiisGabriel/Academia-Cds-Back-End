@@ -80,6 +80,56 @@ class AuthController {
     }
   }
 
+  async getAmbientes(req, res) {
+    try {
+      const ambientes = await this.authService.getAmbientes();
+      res.status(200).json({ ambientes });
+    } catch (err) {
+      console.error("GET auth/getAmbientes, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
+  async getModulos(req, res) {
+    try {
+      const modulos = await this.authService.getModulos();
+      res.status(200).json({ modulos });
+    } catch (err) {
+      console.error("GET auth/getModulos, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
+  async getSubModulos(req, res) {
+    try {
+      const subModulos = await this.authService.getSubModulos();
+      res.status(200).json({ subModulos });
+    } catch (err) {
+      console.error("GET auth/getSubModulos, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
+  async getTreinamentos(req, res) {
+    try {
+      const treinamentos = await this.authService.getTreinamentos();
+      res.status(200).json({ treinamentos });
+    } catch (err) {
+      console.error("GET auth/getTreinamentos, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
+  async getAvaliacoes(req, res) {
+    try {
+      const avaliacoes = await this.authService.getAvaliacoes();
+      res.status(200).json({ avaliacoes });
+    } catch (err) {
+      console.error("GET auth/getAvaliacoes, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
   async createVideo(req, res) {
     try {
       const { titulo, ambiente, modulo, url, subModulo } = req.body;
@@ -97,6 +147,48 @@ class AuthController {
       res.send({ user, token });
     } catch (err) {
       console.error("POST auth/createVideo, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
+  async createTreinamento(req, res) {
+    try {
+      const { titulo, descricao, ambiente, modulo, subModulo } = req.body;
+      if (!titulo || !descricao || !ambiente || !modulo || !subModulo) {
+        res.status(400).end();
+        return;
+      }
+      const { user, token } = await this.authService.createTreinamento({
+        titulo,
+        descricao,
+        ambiente,
+        modulo,
+        subModulo,
+      });
+      res.send({ user, token });
+    } catch (err) {
+      console.error("POST auth/createTreinamento, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
+  async createAvaliacao(req, res) {
+    try {
+      const { titulo, descricao, ambiente, modulo, subModulo } = req.body;
+      if (!titulo || !descricao || !ambiente || !modulo || !subModulo) {
+        res.status(400).end();
+        return;
+      }
+      const { user, token } = await this.authService.createAvaliacao({
+        titulo,
+        descricao,
+        ambiente,
+        modulo,
+        subModulo,
+      });
+      res.send({ user, token });
+    } catch (err) {
+      console.error("POST auth/createAvaliacao, Something Went Wrong:", err);
       res.status(400).send({ error: true, message: err.message });
     }
   }
@@ -137,6 +229,24 @@ class AuthController {
       res.send({ updatedUserWatchedVideos });
     } catch (err) {
       console.error("POST auth/updateUserWatchedVideos, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
+  async updateUserAnsweredValuations(req, res) {
+    try {
+      const { email, answeredValuations } = req.body;
+      if (!email || !answeredValuations) {
+        res.status(400).end();
+        return;
+      }
+      const { updatedUserAnsweredValuations } = await this.authService.updateUserAnsweredValuations({
+        email,
+        answeredValuations,
+      });
+      res.send({ updatedUserAnsweredValuations });
+    } catch (err) {
+      console.error("POST auth/updateUserAnsweredValuations, Something Went Wrong:", err);
       res.status(400).send({ error: true, message: err.message });
     }
   }
