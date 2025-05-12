@@ -156,7 +156,7 @@ export const CreateNextUserMutation = gql`
 `;
 
 export const updateUserWatchedVideosMutation = gql`
-mutation updateNextUserWatchedvideos($watchedvideos: [String!], $email: String!) {
+mutation updateNextUserWatchedvideos($watchedvideos: Json!, $email: String!) {
     updateNextUser(where:{email: $email}, data: {watchedvideos: $watchedvideos}){
       email
       watchedvideos
