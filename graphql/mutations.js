@@ -12,7 +12,7 @@ query getUserByEmailQuery($email: String!) {
     url
     }
     role
-    watchedvideos
+    watchedVideos
     answeredValuations
   }
 }
@@ -156,10 +156,10 @@ export const CreateNextUserMutation = gql`
 `;
 
 export const updateUserWatchedVideosMutation = gql`
-mutation updateNextUserWatchedvideos($watchedvideos: Json!, $email: String!) {
-    updateNextUser(where:{email: $email}, data: {watchedvideos: $watchedvideos}){
+mutation updateNextUserWatchedVideos($watchedVideos: Json!, $email: String!) {
+    updateNextUser(where:{email: $email}, data: {watchedVideos: $watchedVideos}){
       email
-      watchedvideos
+      watchedVideos
     }
   }
 `;
