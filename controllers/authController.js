@@ -217,14 +217,14 @@ class AuthController {
 
   async updateUserWatchedVideos(req, res) {
     try {
-      const { email, watchedvideos } = req.body;
-      if (!email || !watchedvideos) {
+      const { email, watchedVideos } = req.body;
+      if (!email || !watchedVideos) {
         res.status(400).end();
         return;
       }
       const { updatedUserWatchedVideos } = await this.authService.updateUserWatchedVideos({
         email,
-        watchedvideos,
+        watchedVideos,
       });
       res.send({ updatedUserWatchedVideos });
     } catch (err) {

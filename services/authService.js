@@ -211,10 +211,10 @@ class AuthService {
   }
 
   async updateUserWatchedVideos(updatedUserWatchedVideosRequest) {
-    const { email, watchedvideos } = updatedUserWatchedVideosRequest;
+    const { email, watchedVideos } = updatedUserWatchedVideosRequest;
     const response = await gqlClient.request(updateUserWatchedVideosMutation, {
       email,
-      watchedvideos,
+      watchedVideos,
     });
     if (!response?.updateNextUser) {
       throw new Error("UpdateUserWatchedVideos Failed");
