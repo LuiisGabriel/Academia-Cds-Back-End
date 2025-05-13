@@ -138,13 +138,15 @@ class AuthService {
   }
 
   async createVideo(createVideoRequest) {
-    const { titulo, ambiente, modulo, url, subModulo } = createVideoRequest;
+    const { titulo, ambiente, modulo, url, subModulo, descricao } = createVideoRequest;
+  
     const videoData = {
       titulo,
       ambiente,
       modulo,
       url,
       subModulo,
+      descricao,
     };
     const response = await gqlClient.request(CreateVideoMutation, {
       videoData,
@@ -233,7 +235,6 @@ class AuthService {
     }
     return response.updateNextUser;
   }
-
 
 }
 

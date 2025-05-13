@@ -132,8 +132,8 @@ class AuthController {
 
   async createVideo(req, res) {
     try {
-      const { titulo, ambiente, modulo, url, subModulo } = req.body;
-      if (!titulo || !ambiente || !modulo || !url || !subModulo) {
+      const { titulo, ambiente, modulo, url, subModulo, descricao } = req.body;
+      if (!titulo || !ambiente || !modulo || !url || !subModulo || !descricao) {
         res.status(400).end();
         return;
       }
@@ -143,6 +143,7 @@ class AuthController {
         modulo,
         url,
         subModulo,
+        descricao,
       });
       res.send({ user, token });
     } catch (err) {
