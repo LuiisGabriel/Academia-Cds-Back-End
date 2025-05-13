@@ -27,6 +27,7 @@ query getVideos($modulo: String, $subModulo: String, $ambiente: String) {
   ) {
     id
     titulo
+    descricao
     modulo
     subModulo
     ambiente
