@@ -55,14 +55,24 @@ class AuthController {
     }
   }
 
-  async getVideos(req, res) {
+    async getVideos(req, res) {
+    try {
+      const videos = await this.authService.getVideos();
+      res.status(200).json({ videos });
+    } catch (err) {
+      console.error("GET auth/getVideos, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
+  async getTrainmentVideos(req, res) {
     try {
       const { ambiente, modulo, subModulo } = req.query;
       if (!ambiente || !modulo || !subModulo) {
         res.status(400).end();
         return;
       }
-      const videos = await this.authService.getVideos(ambiente, modulo, subModulo);
+      const videos = await this.authService.getTrainmentVideos(ambiente, modulo, subModulo);
       res.status(200).json({ videos });
     } catch (err) {
       console.error("GET auth/getVideos, Something Went Wrong:", err);

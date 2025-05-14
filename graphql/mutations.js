@@ -19,6 +19,24 @@ query getUserByEmailQuery($email: String!) {
 `;
 
 export const GetVideosQuery = gql`
+query getVideos{
+  videos(
+    stage: DRAFT
+    first: 999999
+  ){
+    id
+    titulo
+    descricao
+    modulo
+    subModulo
+    ambiente
+    url
+    videoId
+  }
+}
+`;
+
+export const GetTrainmentVideosQuery = gql`
 query getVideos($modulo: String, $subModulo: String, $ambiente: String) {
   videos(
     first: 999999

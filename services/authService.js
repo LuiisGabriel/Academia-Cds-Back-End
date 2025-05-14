@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import gqlClient from "../graphql/client.js";
-import { CreateNextUserMutation, GetUserByEmailQuery, CreateVideoMutation, GetVideosQuery, GetQuestionsQuery, updateUserWatchedVideosMutation, CreateQuestionMutation, GetAmbientesQuery, GetModulosQuery, GetSubModulosQuery, GetTreinamentosQuery, CreateTreinamentoMutation, GetAvaliacoesQuery, CreateAvaliacaoMutation, updateUserAnsweredValuationsMutation } from "../graphql/mutations.js";
+import { CreateNextUserMutation, GetUserByEmailQuery, CreateVideoMutation, GetQuestionsQuery, updateUserWatchedVideosMutation, CreateQuestionMutation, GetAmbientesQuery, GetModulosQuery, GetSubModulosQuery, GetTreinamentosQuery, CreateTreinamentoMutation, GetAvaliacoesQuery, CreateAvaliacaoMutation, updateUserAnsweredValuationsMutation, GetTrainmentVideosQuery, GetVideosQuery } from "../graphql/mutations.js";
 
 const { JWT_SECRET, JWT_EXPIRES_IN } = process.env;
 
@@ -70,8 +70,17 @@ class AuthService {
     return nextUser;
   }
 
-  async getVideos(ambiente, modulo, subModulo) {
-    const getVideosResponse = await gqlClient.request(GetVideosQuery, {
+    async getVideos() {
+    const getVideosResponse = await gqlClient.request(GetVideosQuery);
+    const { videos } = getVideosResponse;
+    if (!videos) {
+      throw new Error("Videos não encontrados");
+    }
+    return videos;
+  }
+
+  async getTrainmentVideos(ambiente, modulo, subModulo) {
+    const getVideosResponse = await gqlClient.request(GetTrainmentVideosQuery, {
       ambiente,
       modulo,
       subModulo,
@@ -236,7 +245,6 @@ class AuthService {
     }
     return response.updateNextUser;
   }
-
 
 }
 
