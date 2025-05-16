@@ -18,6 +18,26 @@ query getUserByEmailQuery($email: String!) {
 }
 `;
 
+export const GetNextUsersQuesry = gql`
+query getNextUsers {
+  nextUsers(
+    stage: DRAFT
+    first: 999999
+  ){
+    id
+    role
+    email
+    firstname
+    lastname
+    answeredValuations
+    watchedVideos
+    photo{
+      url
+    }
+  }
+}
+`;
+
 export const GetVideosQuery = gql`
 query getVideos{
   videos(
@@ -171,6 +191,7 @@ export const CreateNextUserMutation = gql`
     mutation CreateNextUser($userData: NextUserCreateInput!) {
       createNextUser(data: $userData) {
       id
+
     }
   }
 `;

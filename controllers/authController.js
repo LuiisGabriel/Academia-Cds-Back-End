@@ -55,7 +55,17 @@ class AuthController {
     }
   }
 
-    async getVideos(req, res) {
+  async getNextUsers(req, res) {
+    try {
+      const nextUsers = await this.authService.getNextUsers();
+      res.status(200).json({ nextUsers });
+    } catch (err) {
+      console.error("GET auth/getNextUsers, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
+  async getVideos(req, res) {
     try {
       const videos = await this.authService.getVideos();
       res.status(200).json({ videos });
@@ -208,7 +218,7 @@ class AuthController {
   async createQuestion(req, res) {
     try {
       const { title, answerOptions, modulo, ambiente, subModulo, nivel } = req.body;
-      if (!title ||!answerOptions || !ambiente || !modulo || !subModulo || !nivel) {
+      if (!title || !answerOptions || !ambiente || !modulo || !subModulo || !nivel) {
         res.status(400).end();
         return;
       }

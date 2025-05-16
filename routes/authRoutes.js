@@ -6,6 +6,7 @@ const authController = new AuthController();
 
 
 router.get('/auth/me', (req, res) => authController.getCurrentUser(req, res));
+router.get('/auth/getNextUsers', (req,res) => authController.getNextUsers(req,res));
 router.get('/auth/getTrainmentVideos', (req, res) => authController.getTrainmentVideos(req, res));
 router.get('/auth/getVideos', (req,res) => authController.getVideos(req,res));
 router.get('/auth/getQuestions', (req,res) => authController.getQuestions(req,res));
