@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import gqlClient from "../graphql/client.js";
-import { CreateNextUserMutation, GetUserByEmailQuery, updateUserWatchedVideosMutation, GetAmbientesQuery, GetModulosQuery, GetSubModulosQuery, GetTreinamentosQuery, CreateTreinamentoMutation, GetAvaliacoesQuery, CreateAvaliacaoMutation, updateUserAnsweredValuationsMutation, publishValuationMutation, GetNextUsersQuery, publishTrainmentMutation, unpublishTrainmentMutation, deleteTrainmentMutation } from "../graphql/mutations.js";
+import { CreateNextUserMutation, GetUserByEmailQuery, updateUserWatchedVideosMutation, GetAmbientesQuery, GetModulosQuery, GetSubModulosQuery, GetTreinamentosQuery, CreateTreinamentoMutation, GetAvaliacoesQuery, CreateAvaliacaoMutation, updateUserAnsweredValuationsMutation, publishValuationMutation, GetNextUsersQuery, publishTrainmentMutation, unpublishTrainmentMutation, deleteTrainmentMutation, deleteValuationMutation, unpublishValuationMutation } from "../graphql/mutations.js";
 
 const { JWT_SECRET, JWT_EXPIRES_IN } = process.env;
 
@@ -196,6 +196,28 @@ class AuthService {
       throw new Error("PublishValuation Failed");
     }
     return response.publishAvaliacao;
+  }
+
+      async unpublishValuation(unpublishedValuationRequest) {
+    const { titulo } = unpublishedValuationRequest;
+    const response = await gqlClient.request(unpublishValuationMutation, {
+      titulo,
+    });
+    if (!response?.unpublishAvaliacao) {
+      throw new Error("UnpublishValuation Failed");
+    }
+    return response.unpublishAvaliacao;
+  }
+
+      async deleteValuation(deletedValuationRequest) {
+    const { titulo } = deletedValuationRequest;
+    const response = await gqlClient.request(deleteValuationMutation, {
+      titulo,
+    });
+    if (!response?.deleteAvaliacao) {
+      throw new Error("DeleteValuation Failed");
+    }
+    return response.deleteAvaliacao;
   }
 
   async publishTrainment(publishedTrainmentRequest) {

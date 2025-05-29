@@ -160,6 +160,20 @@ mutation MyMutation($titulo: String!) {
   }
 }`;
 
+export const unpublishValuationMutation = gql`
+mutation unpublishValuationMuation($titulo: String!) {
+  unpublishAvaliacao(where: {titulo: $titulo}) {
+    id
+  }
+}`;
+
+export const deleteValuationMutation = gql`
+mutation deleteValuationMuation($titulo: String!) {
+  deleteAvaliacao(where: {titulo: $titulo}) {
+    id
+  }
+}`;
+
 export const publishTrainmentMutation = gql`
 mutation publishTrainmentMuation($titulo: String!) {
   publishTreinamento(where: {titulo: $titulo}, to: PUBLISHED) {

@@ -212,6 +212,40 @@ class AuthController {
     }
   }
 
+      async unpublishValuation(req, res) {
+    try {
+      const { titulo } = req.body;
+      if (!titulo) {
+        res.status(400).end();
+        return;
+      }
+      const { unpublishedValuation } = await this.authService.unpublishValuation({
+        titulo,
+      });
+      res.send({ unpublishedValuation });
+    } catch (err) {
+      console.error("POST auth/unpublishValuation, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
+      async deleteValuation(req, res) {
+    try {
+      const { titulo } = req.body;
+      if (!titulo) {
+        res.status(400).end();
+        return;
+      }
+      const { deletedValuation } = await this.authService.deleteValuation({
+        titulo,
+      });
+      res.send({ deletedValuation });
+    } catch (err) {
+      console.error("POST auth/deleteValuation, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
   async publishTrainment(req, res) {
     try {
       const { titulo } = req.body;
