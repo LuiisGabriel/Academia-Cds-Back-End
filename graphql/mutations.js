@@ -18,7 +18,7 @@ query getUserByEmailQuery($email: String!) {
 }
 `;
 
-export const GetNextUsersQuesry = gql`
+export const GetNextUsersQuery = gql`
 query getNextUsers {
   nextUsers(
     stage: DRAFT
@@ -34,59 +34,6 @@ query getNextUsers {
     photo{
       url
     }
-  }
-}
-`;
-
-export const GetVideosQuery = gql`
-query getVideos{
-  videos(
-    stage: DRAFT
-    first: 999999
-  ){
-    id
-    titulo
-    descricao
-    modulo
-    subModulo
-    ambiente
-    url
-    videoId
-  }
-}
-`;
-
-export const GetTrainmentVideosQuery = gql`
-query getVideos($modulo: String, $subModulo: String, $ambiente: String) {
-  videos(
-    first: 999999
-    stage: DRAFT
-    where: {modulo: $modulo, AND: {subModulo: $subModulo, AND: {ambiente: $ambiente}}}
-  ) {
-    id
-    titulo
-    descricao
-    modulo
-    subModulo
-    ambiente
-    url
-    videoId
-  }
-}
-`;
-
-export const GetQuestionsQuery = gql`
-query getQuestions{
-  questions(
-    first: 999999
-    stage: DRAFT
-  ){
-    title
-    nivel
-    ambiente
-    modulo
-    subModulo
-    answerOptions
   }
 }
 `;
@@ -135,6 +82,10 @@ query getTreinamentos{
     ambiente
     modulo
     subModulo
+    videos
+    documentInStages {
+      stage
+    }
   }
 }
 `;
@@ -151,17 +102,13 @@ query getAvaliacoes{
     ambiente
     modulo
     subModulo
+    valuationQuestions
+    documentInStages {
+      stage
+    }
   }
 }
 `;
-
-export const CreateVideoMutation = gql`
-    mutation CreateVideo($videoData: VideoCreateInput!) {
-      createVideo(data: $videoData) {
-      id
-    }
-  } 
- `;
 
 export const CreateTreinamentoMutation = gql`
     mutation CreateTreinamento($treinamentoData: TreinamentoCreateInput!) {
@@ -178,14 +125,6 @@ export const CreateAvaliacaoMutation = gql`
  }
 } 
 `;
-
-export const CreateQuestionMutation = gql`
-   mutation CreateQuestion($questionData: QuestionCreateInput!) {
-      createQuestion(data: $questionData) {
-      id
-    }
-  } 
- `;
 
 export const CreateNextUserMutation = gql`
     mutation CreateNextUser($userData: NextUserCreateInput!) {
@@ -213,6 +152,35 @@ mutation updateNextUserAnsweredValuations($answeredValuations: Json!, $email: St
     }
 }
 `;
+
+export const publishValuationMutation = gql`
+mutation MyMutation($titulo: String!) {
+  publishAvaliacao(where: {titulo: $titulo}, to: PUBLISHED) {
+    id
+  }
+}`;
+
+export const publishTrainmentMutation = gql`
+mutation publishTrainmentMuation($titulo: String!) {
+  publishTreinamento(where: {titulo: $titulo}, to: PUBLISHED) {
+    id
+  }
+}`;
+
+export const unpublishTrainmentMutation = gql`
+mutation unpublishTrainmentMuation($titulo: String!) {
+  unpublishTreinamento(where: {titulo: $titulo}) {
+    id
+  }
+}`;
+
+export const deleteTrainmentMutation = gql`
+mutation deleteTrainmentMuation($titulo: String!) {
+  deleteTreinamento(where: {titulo: $titulo}) {
+    id
+  }
+}`;
+
 
 
 

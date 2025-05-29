@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import gqlClient from "../graphql/client.js";
-import { CreateNextUserMutation, GetUserByEmailQuery, CreateVideoMutation, GetQuestionsQuery, updateUserWatchedVideosMutation, CreateQuestionMutation, GetAmbientesQuery, GetModulosQuery, GetSubModulosQuery, GetTreinamentosQuery, CreateTreinamentoMutation, GetAvaliacoesQuery, CreateAvaliacaoMutation, updateUserAnsweredValuationsMutation, GetTrainmentVideosQuery, GetVideosQuery, GetNextUsersQuesry } from "../graphql/mutations.js";
+import { CreateNextUserMutation, GetUserByEmailQuery, updateUserWatchedVideosMutation, GetAmbientesQuery, GetModulosQuery, GetSubModulosQuery, GetTreinamentosQuery, CreateTreinamentoMutation, GetAvaliacoesQuery, CreateAvaliacaoMutation, updateUserAnsweredValuationsMutation, publishValuationMutation, GetNextUsersQuery, publishTrainmentMutation, unpublishTrainmentMutation, deleteTrainmentMutation } from "../graphql/mutations.js";
 
 const { JWT_SECRET, JWT_EXPIRES_IN } = process.env;
 
@@ -70,44 +70,13 @@ class AuthService {
     return nextUser;
   }
 
-  async getVideos() {
-    const getVideosResponse = await gqlClient.request(GetVideosQuery);
-    const { videos } = getVideosResponse;
-    if (!videos) {
-      throw new Error("Videos não encontrados");
-    }
-    return videos;
-  }
-
   async getNextUsers() {
-    const getNextUsersResponse = await gqlClient.request(GetNextUsersQuesry);
+    const getNextUsersResponse = await gqlClient.request(GetNextUsersQuery);
     const { nextUsers } = getNextUsersResponse;
     if (!nextUsers) {
       throw new Error("Usuários não encontrados");
     }
     return nextUsers;
-  }
-
-  async getTrainmentVideos(ambiente, modulo, subModulo) {
-    const getVideosResponse = await gqlClient.request(GetTrainmentVideosQuery, {
-      ambiente,
-      modulo,
-      subModulo,
-    });
-    const { videos } = getVideosResponse;
-    if (!videos) {
-      throw new Error("Videos não encontrados");
-    }
-    return videos;
-  }
-
-  async getQuestions() {
-    const getQuestionsResponse = await gqlClient.request(GetQuestionsQuery);
-    const { questions } = getQuestionsResponse;
-    if (!questions) {
-      throw new Error("Questões não encontradas");
-    }
-    return questions;
   }
 
   async getAmbientes() {
@@ -155,35 +124,16 @@ class AuthService {
     return avaliacoes;
   }
 
-  async createVideo(createVideoRequest) {
-    const { titulo, ambiente, modulo, url, subModulo, descricao, videoId } = createVideoRequest;
-
-    const videoData = {
-      titulo,
-      ambiente,
-      modulo,
-      url,
-      subModulo,
-      descricao,
-      videoId,
-    };
-    const response = await gqlClient.request(CreateVideoMutation, {
-      videoData,
-    });
-    if (!response?.createVideo) {
-      throw new Error("CreateVideo Failed");
-    }
-    return { user: response.createVideo };
-  }
 
   async createTreinamento(createTreinamentoRequest) {
-    const { titulo, descricao, ambiente, modulo, subModulo } = createTreinamentoRequest;
+    const { titulo, descricao, ambiente, modulo, subModulo, videos } = createTreinamentoRequest;
     const treinamentoData = {
       titulo,
       descricao,
       ambiente,
       modulo,
       subModulo,
+      videos,
     };
     const response = await gqlClient.request(CreateTreinamentoMutation, {
       treinamentoData,
@@ -195,13 +145,14 @@ class AuthService {
   }
 
   async createAvaliacao(createAvaliacaoRequest) {
-    const { titulo, descricao, ambiente, modulo, subModulo } = createAvaliacaoRequest;
+    const { titulo, descricao, ambiente, modulo, subModulo, valuationQuestions } = createAvaliacaoRequest;
     const avaliacaoData = {
       titulo,
       descricao,
       ambiente,
       modulo,
       subModulo,
+      valuationQuestions,
     };
     const response = await gqlClient.request(CreateAvaliacaoMutation, {
       avaliacaoData,
@@ -210,25 +161,6 @@ class AuthService {
       throw new Error("CreateAvaliacao Failed");
     }
     return { user: response.createAvaliacao };
-  }
-
-  async createQuestion(createQuestionRequest) {
-    const { title, ambiente, modulo, subModulo, nivel, answerOptions } = createQuestionRequest;
-    const questionData = {
-      title,
-      ambiente,
-      modulo,
-      nivel,
-      subModulo,
-      answerOptions,
-    };
-    const response = await gqlClient.request(CreateQuestionMutation, {
-      questionData,
-    });
-    if (!response?.createQuestion) {
-      throw new Error("CreateQuestion Failed");
-    }
-    return { user: response.createQuestion };
   }
 
   async updateUserWatchedVideos(updatedUserWatchedVideosRequest) {
@@ -255,6 +187,49 @@ class AuthService {
     return response.updateNextUser;
   }
 
+  async publishValuation(publishedValuationRequest) {
+    const { titulo } = publishedValuationRequest;
+    const response = await gqlClient.request(publishValuationMutation, {
+      titulo,
+    });
+    if (!response?.publishAvaliacao) {
+      throw new Error("PublishValuation Failed");
+    }
+    return response.publishAvaliacao;
+  }
+
+  async publishTrainment(publishedTrainmentRequest) {
+    const { titulo } = publishedTrainmentRequest;
+    const response = await gqlClient.request(publishTrainmentMutation, {
+      titulo,
+    });
+    if (!response?.publishTreinamento) {
+      throw new Error("PublishTrainment Failed");
+    }
+    return response.publishTreinamento;
+  }
+
+    async unpublishTrainment(unpublishedTrainmentRequest) {
+    const { titulo } = unpublishedTrainmentRequest;
+    const response = await gqlClient.request(unpublishTrainmentMutation, {
+      titulo,
+    });
+    if (!response?.unpublishTreinamento) {
+      throw new Error("UnpublishTrainment Failed");
+    }
+    return response.unpublishTreinamento;
+  }
+
+      async deleteTrainment(deletedTrainmentRequest) {
+    const { titulo } = deletedTrainmentRequest;
+    const response = await gqlClient.request(deleteTrainmentMutation, {
+      titulo,
+    });
+    if (!response?.deleteTreinamento) {
+      throw new Error("DeleteTrainment Failed");
+    }
+    return response.deleteTreinamento;
+  }
 
 }
 

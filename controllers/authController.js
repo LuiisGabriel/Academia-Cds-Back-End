@@ -65,41 +65,6 @@ class AuthController {
     }
   }
 
-  async getVideos(req, res) {
-    try {
-      const videos = await this.authService.getVideos();
-      res.status(200).json({ videos });
-    } catch (err) {
-      console.error("GET auth/getVideos, Something Went Wrong:", err);
-      res.status(400).send({ error: true, message: err.message });
-    }
-  }
-
-  async getTrainmentVideos(req, res) {
-    try {
-      const { ambiente, modulo, subModulo } = req.query;
-      if (!ambiente || !modulo || !subModulo) {
-        res.status(400).end();
-        return;
-      }
-      const videos = await this.authService.getTrainmentVideos(ambiente, modulo, subModulo);
-      res.status(200).json({ videos });
-    } catch (err) {
-      console.error("GET auth/getVideos, Something Went Wrong:", err);
-      res.status(400).send({ error: true, message: err.message });
-    }
-  }
-
-  async getQuestions(req, res) {
-    try {
-      const questions = await this.authService.getQuestions();
-      res.status(200).json({ questions });
-    } catch (err) {
-      console.error("GET auth/getQuestions, Something Went Wrong:", err);
-      res.status(400).send({ error: true, message: err.message });
-    }
-  }
-
   async getAmbientes(req, res) {
     try {
       const ambientes = await this.authService.getAmbientes();
@@ -150,33 +115,10 @@ class AuthController {
     }
   }
 
-  async createVideo(req, res) {
-    try {
-      const { titulo, ambiente, modulo, url, subModulo, descricao, videoId } = req.body;
-      if (!titulo || !ambiente || !modulo || !url || !subModulo || !descricao || !videoId) {
-        res.status(400).end();
-        return;
-      }
-      const { user, token } = await this.authService.createVideo({
-        titulo,
-        ambiente,
-        modulo,
-        url,
-        subModulo,
-        descricao,
-        videoId,
-      });
-      res.send({ user, token });
-    } catch (err) {
-      console.error("POST auth/createVideo, Something Went Wrong:", err);
-      res.status(400).send({ error: true, message: err.message });
-    }
-  }
-
   async createTreinamento(req, res) {
     try {
-      const { titulo, descricao, ambiente, modulo, subModulo } = req.body;
-      if (!titulo || !descricao || !ambiente || !modulo || !subModulo) {
+      const { titulo, descricao, ambiente, modulo, subModulo, videos } = req.body;
+      if (!titulo || !descricao || !ambiente || !modulo || !subModulo || !videos) {
         res.status(400).end();
         return;
       }
@@ -186,6 +128,7 @@ class AuthController {
         ambiente,
         modulo,
         subModulo,
+        videos,
       });
       res.send({ user, token });
     } catch (err) {
@@ -196,8 +139,8 @@ class AuthController {
 
   async createAvaliacao(req, res) {
     try {
-      const { titulo, descricao, ambiente, modulo, subModulo } = req.body;
-      if (!titulo || !descricao || !ambiente || !modulo || !subModulo) {
+      const { titulo, descricao, ambiente, modulo, subModulo, valuationQuestions } = req.body;
+      if (!titulo || !descricao || !ambiente || !modulo || !subModulo || !valuationQuestions) {
         res.status(400).end();
         return;
       }
@@ -207,32 +150,11 @@ class AuthController {
         ambiente,
         modulo,
         subModulo,
+        valuationQuestions
       });
       res.send({ user, token });
     } catch (err) {
       console.error("POST auth/createAvaliacao, Something Went Wrong:", err);
-      res.status(400).send({ error: true, message: err.message });
-    }
-  }
-
-  async createQuestion(req, res) {
-    try {
-      const { title, answerOptions, modulo, ambiente, subModulo, nivel } = req.body;
-      if (!title || !answerOptions || !ambiente || !modulo || !subModulo || !nivel) {
-        res.status(400).end();
-        return;
-      }
-      const { user, token } = await this.authService.createQuestion({
-        title,
-        ambiente,
-        modulo,
-        nivel,
-        subModulo,
-        answerOptions,
-      });
-      res.send({ user, token });
-    } catch (err) {
-      console.error("POST auth/createQuestion, Something Went Wrong:", err);
       res.status(400).send({ error: true, message: err.message });
     }
   }
@@ -269,6 +191,74 @@ class AuthController {
       res.send({ updatedUserAnsweredValuations });
     } catch (err) {
       console.error("POST auth/updateUserAnsweredValuations, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
+  async publishValuation(req, res) {
+    try {
+      const { titulo } = req.body;
+      if (!titulo) {
+        res.status(400).end();
+        return;
+      }
+      const { publishedValuation } = await this.authService.publishValuation({
+        titulo,
+      });
+      res.send({ publishedValuation });
+    } catch (err) {
+      console.error("POST auth/publishValuation, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
+  async publishTrainment(req, res) {
+    try {
+      const { titulo } = req.body;
+      if (!titulo) {
+        res.status(400).end();
+        return;
+      }
+      const { publishedTrainment } = await this.authService.publishTrainment({
+        titulo,
+      });
+      res.send({ publishedTrainment });
+    } catch (err) {
+      console.error("POST auth/publishTrainment, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
+    async unpublishTrainment(req, res) {
+    try {
+      const { titulo } = req.body;
+      if (!titulo) {
+        res.status(400).end();
+        return;
+      }
+      const { unpublishedTrainment } = await this.authService.unpublishTrainment({
+        titulo,
+      });
+      res.send({ unpublishedTrainment });
+    } catch (err) {
+      console.error("POST auth/unpublishTrainment, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
+      async deleteTrainment(req, res) {
+    try {
+      const { titulo } = req.body;
+      if (!titulo) {
+        res.status(400).end();
+        return;
+      }
+      const { deletedTrainment } = await this.authService.deleteTrainment({
+        titulo,
+      });
+      res.send({ deletedTrainment });
+    } catch (err) {
+      console.error("POST auth/deleteTrainment, Something Went Wrong:", err);
       res.status(400).send({ error: true, message: err.message });
     }
   }
