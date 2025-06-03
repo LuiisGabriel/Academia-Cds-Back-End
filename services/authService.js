@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import gqlClient from "../graphql/client.js";
-import { CreateNextUserMutation, GetUserByEmailQuery, updateUserWatchedVideosMutation, GetAmbientesQuery, GetModulosQuery, GetSubModulosQuery, GetTreinamentosQuery, CreateTreinamentoMutation, GetAvaliacoesQuery, CreateAvaliacaoMutation, updateUserAnsweredValuationsMutation, publishValuationMutation, GetNextUsersQuery, publishTrainmentMutation, unpublishTrainmentMutation, deleteTrainmentMutation, deleteValuationMutation, unpublishValuationMutation } from "../graphql/mutations.js";
+import { CreateNextUserMutation, GetUserByEmailQuery, updateUserWatchedVideosMutation, GetAmbientesQuery, GetModulosQuery, GetSubModulosQuery, GetTreinamentosQuery, CreateTreinamentoMutation, GetAvaliacoesQuery, CreateAvaliacaoMutation, updateUserAnsweredValuationsMutation, publishValuationMutation, GetNextUsersQuery, publishTrainmentMutation, unpublishTrainmentMutation, deleteTrainmentMutation, deleteValuationMutation, unpublishValuationMutation, updateTrainmentVideosMutation } from "../graphql/mutations.js";
 
 const { JWT_SECRET, JWT_EXPIRES_IN } = process.env;
 
@@ -185,6 +185,18 @@ class AuthService {
       throw new Error("UpdateUserAnsweredValuations Failed");
     }
     return response.updateNextUser;
+  }
+
+    async updateTrainmentVideos(updatedTrainmentRequest) {
+    const { titulo, videos } = updatedTrainmentRequest;
+    const response = await gqlClient.request(updateTrainmentVideosMutation, {
+      titulo,
+      videos,
+    });
+    if (!response?.updateTreinamento) {
+      throw new Error("UpdateTrainmentVideos Failed");
+    }
+    return response.updateTreinamento;
   }
 
   async publishValuation(publishedValuationRequest) {

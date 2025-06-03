@@ -20,6 +20,7 @@ router.post('/auth/createTreinamento', (req, res) => authController.createTreina
 router.post('/auth/createAvaliacao', (req, res) => authController.createAvaliacao(req, res));
 router.post('/auth/updateUserWatchedVideos', (req, res) => authController.updateUserWatchedVideos(req, res));
 router.post('/auth/updateUserAnsweredValuations', (req, res) => authController.updateUserAnsweredValuations(req, res));
+router.post('/auth/updateTrainmentVideos', (req, res) => authController.updateTrainmentVideos(req, res));
 router.post('/auth/publishValuation', (req, res) => authController.publishValuation(req, res));
 router.post('/auth/unpublishValuation', (req, res) => authController.unpublishValuation(req, res));
 router.post('/auth/deleteValuation', (req, res) => authController.deleteValuation(req, res));

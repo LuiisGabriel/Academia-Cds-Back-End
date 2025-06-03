@@ -195,6 +195,24 @@ class AuthController {
     }
   }
 
+    async updateTrainmentVideos(req, res) {
+    try {
+      const { titulo, videos } = req.body;
+      if (!titulo || !videos) {
+        res.status(400).end();
+        return;
+      }
+      const { updatedTrainment } = await this.authService.updateTrainmentVideos({
+        titulo,
+        videos,
+      });
+      res.send({ updatedTrainment });
+    } catch (err) {
+      console.error("POST auth/updateTrainmentVideos, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
   async publishValuation(req, res) {
     try {
       const { titulo } = req.body;
