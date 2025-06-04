@@ -195,7 +195,7 @@ class AuthController {
     }
   }
 
-    async updateTrainmentVideos(req, res) {
+  async updateTrainmentVideos(req, res) {
     try {
       const { titulo, videos } = req.body;
       if (!titulo || !videos) {
@@ -209,6 +209,24 @@ class AuthController {
       res.send({ updatedTrainment });
     } catch (err) {
       console.error("POST auth/updateTrainmentVideos, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
+  async updateValuationQuestions(req, res) {
+    try {
+      const { titulo, valuationQuestions } = req.body;
+      if (!titulo || !valuationQuestions) {
+        res.status(400).end();
+        return;
+      }
+      const { updatedValuation } = await this.authService.updateValuationQuestions({
+        titulo,
+        valuationQuestions,
+      });
+      res.send({ updatedValuation });
+    } catch (err) {
+      console.error("POST auth/updatevaluationQuestions, Something Went Wrong:", err);
       res.status(400).send({ error: true, message: err.message });
     }
   }
@@ -230,7 +248,7 @@ class AuthController {
     }
   }
 
-      async unpublishValuation(req, res) {
+  async unpublishValuation(req, res) {
     try {
       const { titulo } = req.body;
       if (!titulo) {
@@ -247,7 +265,7 @@ class AuthController {
     }
   }
 
-      async deleteValuation(req, res) {
+  async deleteValuation(req, res) {
     try {
       const { titulo } = req.body;
       if (!titulo) {
@@ -281,7 +299,7 @@ class AuthController {
     }
   }
 
-    async unpublishTrainment(req, res) {
+  async unpublishTrainment(req, res) {
     try {
       const { titulo } = req.body;
       if (!titulo) {
@@ -298,7 +316,7 @@ class AuthController {
     }
   }
 
-      async deleteTrainment(req, res) {
+  async deleteTrainment(req, res) {
     try {
       const { titulo } = req.body;
       if (!titulo) {

@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import gqlClient from "../graphql/client.js";
-import { CreateNextUserMutation, GetUserByEmailQuery, updateUserWatchedVideosMutation, GetAmbientesQuery, GetModulosQuery, GetSubModulosQuery, GetTreinamentosQuery, CreateTreinamentoMutation, GetAvaliacoesQuery, CreateAvaliacaoMutation, updateUserAnsweredValuationsMutation, publishValuationMutation, GetNextUsersQuery, publishTrainmentMutation, unpublishTrainmentMutation, deleteTrainmentMutation, deleteValuationMutation, unpublishValuationMutation, updateTrainmentVideosMutation } from "../graphql/mutations.js";
+import { CreateNextUserMutation, GetUserByEmailQuery, updateUserWatchedVideosMutation, GetAmbientesQuery, GetModulosQuery, GetSubModulosQuery, GetTreinamentosQuery, CreateTreinamentoMutation, GetAvaliacoesQuery, CreateAvaliacaoMutation, updateUserAnsweredValuationsMutation, publishValuationMutation, GetNextUsersQuery, publishTrainmentMutation, unpublishTrainmentMutation, deleteTrainmentMutation, deleteValuationMutation, unpublishValuationMutation, updateTrainmentVideosMutation, updateValuationQuestionsMutation } from "../graphql/mutations.js";
 
 const { JWT_SECRET, JWT_EXPIRES_IN } = process.env;
 
@@ -187,7 +187,7 @@ class AuthService {
     return response.updateNextUser;
   }
 
-    async updateTrainmentVideos(updatedTrainmentRequest) {
+  async updateTrainmentVideos(updatedTrainmentRequest) {
     const { titulo, videos } = updatedTrainmentRequest;
     const response = await gqlClient.request(updateTrainmentVideosMutation, {
       titulo,
@@ -197,6 +197,18 @@ class AuthService {
       throw new Error("UpdateTrainmentVideos Failed");
     }
     return response.updateTreinamento;
+  }
+
+  async updateValuationQuestions(updatedValuationRequest) {
+    const { titulo, valuationQuestions } = updatedValuationRequest;
+    const response = await gqlClient.request(updateValuationQuestionsMutation, {
+      titulo,
+      valuationQuestions,
+    });
+    if (!response?.updateAvaliacao) {
+      throw new Error("UpdateValuationQuestions Failed");
+    }
+    return response.updateAvaliacao;
   }
 
   async publishValuation(publishedValuationRequest) {
@@ -210,7 +222,7 @@ class AuthService {
     return response.publishAvaliacao;
   }
 
-      async unpublishValuation(unpublishedValuationRequest) {
+  async unpublishValuation(unpublishedValuationRequest) {
     const { titulo } = unpublishedValuationRequest;
     const response = await gqlClient.request(unpublishValuationMutation, {
       titulo,
@@ -221,7 +233,7 @@ class AuthService {
     return response.unpublishAvaliacao;
   }
 
-      async deleteValuation(deletedValuationRequest) {
+  async deleteValuation(deletedValuationRequest) {
     const { titulo } = deletedValuationRequest;
     const response = await gqlClient.request(deleteValuationMutation, {
       titulo,
@@ -243,7 +255,7 @@ class AuthService {
     return response.publishTreinamento;
   }
 
-    async unpublishTrainment(unpublishedTrainmentRequest) {
+  async unpublishTrainment(unpublishedTrainmentRequest) {
     const { titulo } = unpublishedTrainmentRequest;
     const response = await gqlClient.request(unpublishTrainmentMutation, {
       titulo,
@@ -254,7 +266,7 @@ class AuthService {
     return response.unpublishTreinamento;
   }
 
-      async deleteTrainment(deletedTrainmentRequest) {
+  async deleteTrainment(deletedTrainmentRequest) {
     const { titulo } = deletedTrainmentRequest;
     const response = await gqlClient.request(deleteTrainmentMutation, {
       titulo,

@@ -162,6 +162,15 @@ mutation updateTrainmentVideos($titulo: String!, $videos: Json! ) {
 }
 `;
 
+export const updateValuationQuestionsMutation = gql`
+mutation updateValuationQuestions($titulo: String!, $valuationQuestions: Json! ) {
+  updateAvaliacao(data: {valuationQuestions: $valuationQuestions}, where: {titulo: $titulo}){
+    titulo
+    valuationQuestions
+  }
+}
+`;
+
 export const publishValuationMutation = gql`
 mutation MyMutation($titulo: String!) {
   publishAvaliacao(where: {titulo: $titulo}, to: PUBLISHED) {
