@@ -171,6 +171,25 @@ mutation updateValuationQuestions($titulo: String!, $valuationQuestions: Json! )
 }
 `;
 
+export const updateNextUserMutation = gql`
+mutation updateNextUserMutation ($email: String!,  $firstname: String!, $lastname: String!, $role: String!, $answeredValuations: Json!) {
+  updateNextUser(
+    where: {email: $email},
+    data: {firstname: $firstname, lastname: $lastname, role: $role, answeredValuations: $answeredValuations}
+  ) {
+    email
+  }
+}
+`;
+
+export const redefinePasswordMutation = gql`
+mutation redefinePasswordMutation($email: String!, $password:String!) {
+  updateNextUser(where: {email: $email}, data: {password: $password}){
+    email
+  }
+}
+`;
+
 export const publishValuationMutation = gql`
 mutation MyMutation($titulo: String!) {
   publishAvaliacao(where: {titulo: $titulo}, to: PUBLISHED) {
@@ -188,6 +207,13 @@ mutation unpublishValuationMuation($titulo: String!) {
 export const deleteValuationMutation = gql`
 mutation deleteValuationMuation($titulo: String!) {
   deleteAvaliacao(where: {titulo: $titulo}) {
+    id
+  }
+}`;
+
+export const deleteNextUserMutation = gql`
+mutation deleteNextUserMutation($email: String!) {
+  deleteNextUser(where: {email: $email}){
     id
   }
 }`;

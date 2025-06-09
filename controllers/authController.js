@@ -43,6 +43,24 @@ class AuthController {
     }
   }
 
+  async redefinePassword(req, res) {
+    try {
+      const { email, newPassword } = req.body;
+      if (!email || !newPassword) {
+        res.status(400).end();
+        return;
+      }
+      const { user, token } = await this.authService.redefinePassword({
+        email,
+        newPassword,
+      });
+      res.send({ user, token });
+    } catch (err) {
+      console.error("POST auth/redefinePassword, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
   async getCurrentUser(req, res) {
     const defaultReturnObject = { authenticated: false, user: null };
     try {
@@ -231,6 +249,27 @@ class AuthController {
     }
   }
 
+  async updateNextUser(req, res) {
+    try {
+      const { email, firstname, lastname, role, answeredValuations } = req.body;
+      if (!email || !firstname || !lastname || !role || !answeredValuations) {
+        res.status(400).end();
+        return;
+      }
+      const { updatedUser } = await this.authService.updateNextUser({
+        email,
+        firstname,
+        lastname,
+        role,
+        answeredValuations,
+      });
+      res.send({ updatedUser });
+    } catch (err) {
+      console.error("POST auth/updateNextUser, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
   async publishValuation(req, res) {
     try {
       const { titulo } = req.body;
@@ -278,6 +317,23 @@ class AuthController {
       res.send({ deletedValuation });
     } catch (err) {
       console.error("POST auth/deleteValuation, Something Went Wrong:", err);
+      res.status(400).send({ error: true, message: err.message });
+    }
+  }
+
+  async deleteNextUser(req, res) {
+    try {
+      const { email } = req.body;
+      if (!email) {
+        res.status(400).end();
+        return;
+      }
+      const { deletedNextUser } = await this.authService.deleteNextUser({
+        email,
+      });
+      res.send({ deletedNextUser });
+    } catch (err) {
+      console.error("POST auth/deleteNextUser, Something Went Wrong:", err);
       res.status(400).send({ error: true, message: err.message });
     }
   }

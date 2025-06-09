@@ -22,11 +22,14 @@ router.post('/auth/updateUserWatchedVideos', (req, res) => authController.update
 router.post('/auth/updateUserAnsweredValuations', (req, res) => authController.updateUserAnsweredValuations(req, res));
 router.post('/auth/updateTrainmentVideos', (req, res) => authController.updateTrainmentVideos(req, res));
 router.post('/auth/updateValuationQuestions', (req, res) => authController.updateValuationQuestions(req, res));
+router.post('/auth/updateNextUser', (req, res) => authController.updateNextUser(req, res));
+router.post('/auth/redefinePassword', (req, res) => authController.redefinePassword(req, res));
 router.post('/auth/publishValuation', (req, res) => authController.publishValuation(req, res));
 router.post('/auth/unpublishValuation', (req, res) => authController.unpublishValuation(req, res));
 router.post('/auth/deleteValuation', (req, res) => authController.deleteValuation(req, res));
 router.post('/auth/publishTrainment', (req, res) => authController.publishTrainment(req, res));
 router.post('/auth/unpublishTrainment', (req, res) => authController.unpublishTrainment(req, res));
 router.post('/auth/deleteTrainment', (req, res) => authController.deleteTrainment(req, res));
+router.post('/auth/deleteNextUser', (req, res) => authController.deleteNextUser(req, res));
 
 export default router;

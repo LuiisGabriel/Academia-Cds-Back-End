@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import gqlClient from "../graphql/client.js";
-import { CreateNextUserMutation, GetUserByEmailQuery, updateUserWatchedVideosMutation, GetAmbientesQuery, GetModulosQuery, GetSubModulosQuery, GetTreinamentosQuery, CreateTreinamentoMutation, GetAvaliacoesQuery, CreateAvaliacaoMutation, updateUserAnsweredValuationsMutation, publishValuationMutation, GetNextUsersQuery, publishTrainmentMutation, unpublishTrainmentMutation, deleteTrainmentMutation, deleteValuationMutation, unpublishValuationMutation, updateTrainmentVideosMutation, updateValuationQuestionsMutation } from "../graphql/mutations.js";
+import { CreateNextUserMutation, GetUserByEmailQuery, updateUserWatchedVideosMutation, GetAmbientesQuery, GetModulosQuery, GetSubModulosQuery, GetTreinamentosQuery, CreateTreinamentoMutation, GetAvaliacoesQuery, CreateAvaliacaoMutation, updateUserAnsweredValuationsMutation, publishValuationMutation, GetNextUsersQuery, publishTrainmentMutation, unpublishTrainmentMutation, deleteTrainmentMutation, deleteValuationMutation, unpublishValuationMutation, updateTrainmentVideosMutation, updateValuationQuestionsMutation, updateNextUserMutation, deleteNextUserMutation, redefinePasswordMutation } from "../graphql/mutations.js";
 
 const { JWT_SECRET, JWT_EXPIRES_IN } = process.env;
 
@@ -55,6 +55,37 @@ class AuthService {
       { expiresIn: JWT_EXPIRES_IN }
     );
     return token;
+  }
+
+  async redefinePassword(redefinePasswordRequest) {
+
+    const { email, newPassword } = redefinePasswordRequest;
+
+    const getUserResponse = await gqlClient.request(GetUserByEmailQuery, {
+      email,
+    });
+
+    const { nextUser } = getUserResponse;
+    if (!nextUser) {
+      throw new Error("Este usuário não existe!");
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 8);
+
+    const isMatch = await bcrypt.compare(newPassword, nextUser.password);
+
+    if (isMatch) {
+      throw new Error("A nova senha não pode ser igual à senha atual");
+    }
+
+    const response = await gqlClient.request(redefinePasswordMutation, {
+      email: nextUser.email,
+      password: hashedPassword,
+    });
+    if (!response?.updateNextUser) {
+      throw new Error("RedefinePassword Failed");
+    }
+    return response?.updateNextUser;
   }
 
   async getCurrentUser(token) {
@@ -211,6 +242,21 @@ class AuthService {
     return response.updateAvaliacao;
   }
 
+  async updateNextUser(updatedNextUserRequest) {
+    const { email, firstname, lastname, role, answeredValuations } = updatedNextUserRequest;
+    const response = await gqlClient.request(updateNextUserMutation, {
+      email,
+      firstname,
+      lastname,
+      role,
+      answeredValuations,
+    });
+    if (!response?.updateNextUser) {
+      throw new Error("UpdateNextUser Failed");
+    }
+    return response.updateNextUser;
+  }
+
   async publishValuation(publishedValuationRequest) {
     const { titulo } = publishedValuationRequest;
     const response = await gqlClient.request(publishValuationMutation, {
@@ -242,6 +288,17 @@ class AuthService {
       throw new Error("DeleteValuation Failed");
     }
     return response.deleteAvaliacao;
+  }
+
+  async deleteNextUser(deletedNextUserRequest) {
+    const { email } = deletedNextUserRequest;
+    const response = await gqlClient.request(deleteNextUserMutation, {
+      email,
+    });
+    if (!response?.deleteNextUser) {
+      throw new Error("DeleteNextUser Failed");
+    }
+    return response.deleteNextUser;
   }
 
   async publishTrainment(publishedTrainmentRequest) {
