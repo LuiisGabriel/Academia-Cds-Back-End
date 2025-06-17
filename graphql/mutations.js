@@ -83,6 +83,9 @@ query getTreinamentos{
     modulo
     subModulo
     videos
+    photo{
+    url
+    }
     documentInStages {
       stage
     }
