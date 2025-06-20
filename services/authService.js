@@ -59,7 +59,7 @@ class AuthService {
 
   async redefinePassword(redefinePasswordRequest) {
 
-    const { email, newPassword } = redefinePasswordRequest;
+    const { email, newPassword, currentPassword } = redefinePasswordRequest;
 
     const getUserResponse = await gqlClient.request(GetUserByEmailQuery, {
       email,
@@ -70,18 +70,27 @@ class AuthService {
       throw new Error("Este usuário não existe!");
     }
 
+    const isCurrentPasswordMatch = await bcrypt.compare(currentPassword, nextUser.password);
+
+    if (!isCurrentPasswordMatch) {
+      throw new Error("A senha atual inserida não está correta");
+    }
+
     const hashedPassword = await bcrypt.hash(newPassword, 8);
 
-    const isMatch = await bcrypt.compare(newPassword, nextUser.password);
+    const isNewPasswordMatch = await bcrypt.compare(newPassword, nextUser.password);
 
-    if (isMatch) {
+    if (isNewPasswordMatch) {
       throw new Error("A nova senha não pode ser igual à senha atual");
     }
+
+
 
     const response = await gqlClient.request(redefinePasswordMutation, {
       email: nextUser.email,
       password: hashedPassword,
     });
+
     if (!response?.updateNextUser) {
       throw new Error("RedefinePassword Failed");
     }
@@ -196,6 +205,7 @@ class AuthService {
 
   async updateUserWatchedVideos(updatedUserWatchedVideosRequest) {
     const { email, watchedVideos } = updatedUserWatchedVideosRequest;
+
     const response = await gqlClient.request(updateUserWatchedVideosMutation, {
       email,
       watchedVideos,
